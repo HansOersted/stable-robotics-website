@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="SR.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stable Robotics</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background: #02070d;
+      color: #fff;
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 50;
+      padding: 22px 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, rgba(2,7,13,0.92), rgba(2,7,13,0.35), transparent);
+      transition: all 0.3s ease;
+    }
+
+    header.scrolled {
+      padding: 10px 7%;
+      background: rgba(1, 6, 12, 0.97);
+      border-bottom: 1px solid rgba(84,142,255,0.22);
+      backdrop-filter: blur(14px);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+    }
+
+    header.scrolled .logo {
+      gap: 10px;
+      font-size: 18px;
+    }
+
+    .logo-mark {
+      width: 58px;
+      height: 58px;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 0 18px rgba(22,119,255,0.45));
+      transition: all 0.3s ease;
+    }
+
+    header.scrolled .logo-mark {
+      width: 40px;
+      height: 40px;
+    }
+
+    nav {
+      display: flex;
+      gap: 34px;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    header.scrolled nav {
+      gap: 28px;
+    }
+
+    nav a {
+      font-size: 15px;
+      color: #e9f0ff;
+      opacity: 0.9;
+      transition: all 0.3s ease;
+    }
+
+    header.scrolled nav a {
+      font-size: 14px;
+    }
+
+    nav a:hover { color: #2582ff; }
+
+    .nav-button {
+      border: 1px solid #1677ff;
+      padding: 9px 24px;
+      border-radius: 7px;
+      color: #1677ff;
+      background: rgba(2,7,13,0.35);
+      transition: all 0.3s ease;
+    }
+
+    header.scrolled .nav-button {
+      padding: 6px 18px;
+      border-radius: 6px;
+    }
+
+    .hero {
+      min-height: 92vh;
+      padding: 170px 7% 100px;
+      display: flex;
+      align-items: center;
+      background:
+        linear-gradient(to right, rgba(2,7,13,0.98) 0%, rgba(2,7,13,0.82) 38%, rgba(2,7,13,0.22) 72%, rgba(2,7,13,0.08) 100%),
+        url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=2200&q=85');
+      background-size: cover;
+      background-position: center;
+      border-bottom: 1px solid rgba(22,119,255,0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 72% 52%, rgba(22,119,255,0.18), transparent 33%);
+      pointer-events: none;
+    }
+
+    .hero-content { max-width: 660px; position: relative; z-index: 2; }
+
+    .hero h1 {
+      font-size: clamp(54px, 7vw, 96px);
+      line-height: 0.98;
+      letter-spacing: -3px;
+      margin-bottom: 30px;
+      text-shadow: 0 0 28px rgba(0,0,0,0.65);
+    }
+
+    .blue { color: #1677ff; }
+
+    .hero p {
+      max-width: 570px;
+      color: #e7edf7;
+      font-size: 22px;
+      line-height: 1.55;
+      margin-bottom: 38px;
+    }
+
+    .button {
+      display: inline-flex;
+      gap: 14px;
+      align-items: center;
+      border: 1px solid #1677ff;
+      color: #2582ff;
+      padding: 15px 26px;
+      min-width: 170px;
+      justify-content: center;
+      border-radius: 7px;
+      font-weight: 700;
+      background: rgba(22,119,255,0.06);
+      box-shadow: inset 0 0 18px rgba(22,119,255,0.08);
+    }
+
+    .button:hover { background: rgba(22,119,255,0.15); }
+
+    section { 
+      padding: 86px 7%;
+      scroll-margin-top: 78px;
+    }
+
+    .label {
+      color: #2582ff;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 800;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: clamp(36px, 4vw, 56px);
+      line-height: 1.1;
+      letter-spacing: -1.8px;
+      margin-bottom: 45px;
+    }
+
+    .tech-section {
+      background:
+        radial-gradient(circle at 20% 20%, rgba(22,119,255,0.16), transparent 32%),
+        linear-gradient(180deg, #06111e, #02070d);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border-top: 1px solid rgba(84,142,255,0.24);
+      border-bottom: 1px solid rgba(84,142,255,0.16);
+    }
+
+    .feature {
+      padding: 48px 44px 42px;
+      border-right: 1px solid rgba(84,142,255,0.24);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .feature:last-child { border-right: none; }
+
+    .tech-icon {
+      width: 126px;
+      height: 126px;
+      margin: 0 auto 34px;
+      display: grid;
+      place-items: center;
+      filter: drop-shadow(0 0 18px rgba(22,119,255,0.6));
+    }
+
+    .tech-icon svg { width: 110px; height: 110px; }
+    .feature h3 { font-size: 20px; margin-bottom: 13px; }
+    .feature p { color: #b9c7d8; font-size: 16px; max-width: 280px; }
+
+    .applications {
+      background:
+        radial-gradient(circle at left center, rgba(22,119,255,0.12), transparent 38%),
+        #02070d;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .app-card {
+      min-height: 310px;
+      border: 1px solid rgba(84,142,255,0.28);
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      background: #07111d;
+      box-shadow: 0 22px 60px rgba(0,0,0,0.24);
+    }
+
+    .app-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(2,7,13,0.98), rgba(2,7,13,0.72) 44%, rgba(2,7,13,0.16));
+      z-index: 1;
+    }
+
+    .app-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      inset: 0;
+      transition: transform 0.45s ease;
+      filter: saturate(0.95) contrast(1.1) brightness(0.84);
+    }
+
+    .app-card:hover img { transform: scale(1.06); }
+
+    .app-content {
+      position: absolute;
+      left: 38px;
+      right: 34px;
+      top: 118px;
+      bottom: 28px;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .app-title-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+      min-height: 44px;
+    }
+
+    .mini-icon {
+      width: 36px;
+      height: 36px;
+      color: #2582ff;
+      flex: 0 0 36px;
+    }
+
+    .app-card h3 {
+      font-size: 26px;
+      line-height: 1.1;
+      white-space: nowrap;
+    }
+
+    .app-card p {
+      color: #d4dfef;
+      font-size: 17px;
+      max-width: 380px;
+      min-height: 58px;
+    }
+
+    .arrow {
+      color: #2582ff;
+      font-size: 30px;
+      margin-top: auto;
+      display: inline-block;
+    }
+
+    .pilot {
+      background:
+        linear-gradient(to right, rgba(2,7,13,0.98), rgba(2,7,13,0.78), rgba(2,7,13,0.25)),
+        url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=2200&q=85');
+      background-size: cover;
+      background-position: center;
+      border-top: 1px solid rgba(22,119,255,0.22);
+    }
+
+    .pilot p { color: #d5deed; max-width: 600px; font-size: 19px; margin-bottom: 32px; }
+
+    footer {
+      padding: 42px 7%;
+      background: #010409;
+      border-top: 1px solid rgba(84,142,255,0.18);
+      color: #9dafc5;
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    footer strong { color: #fff; }
+    footer a { color: #2582ff; text-decoration: underline; }
+
+    @media (max-width: 1200px) {
+      .app-card h3 { font-size: 22px; }
+      .app-content { left: 30px; right: 26px; }
+    }
+
+    @media (max-width: 1000px) {
+      nav { display: none; }
+      .features { grid-template-columns: repeat(2, 1fr); }
+      .feature:nth-child(2) { border-right: none; }
+      .cards { grid-template-columns: 1fr 1fr; }
+      .app-card h3 { white-space: normal; }
+    }
+
+    @media (max-width: 680px) {
+      header { padding: 16px 6%; }
+      header.scrolled { padding: 8px 6%; }
+      .logo-mark { width: 48px; height: 48px; }
+      header.scrolled .logo-mark { width: 36px; height: 36px; }
+      .logo { font-size: 18px; }
+      header.scrolled .logo { font-size: 16px; }
+
+      .hero { padding: 150px 6% 90px; background-position: 64% center; }
+      .hero h1 { letter-spacing: -2px; }
+      section { padding: 70px 6%; }
+      .features, .cards { grid-template-columns: 1fr; }
+
+      .feature {
+        border-right: none;
+        border-bottom: 1px solid rgba(84,142,255,0.2);
+        padding: 42px 28px;
+      }
+
+      .app-content {
+        left: 28px;
+        right: 24px;
+        top: 112px;
+      }
+
+      .app-card h3 {
+        font-size: 24px;
+        white-space: normal;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header id="site-header">
+    <a class="logo" href="#">
+      <img class="logo-mark" src="SR.png" alt="Stable Robotics Logo">
+      <div>STABLE ROBOTICS</div>
+    </a>
+
+    <nav>
+      <a href="#technology">Technology</a>
+      <a href="#applications">Applications</a>
+      <a href="#solutions">Try</a>
+      <a class="nav-button" href="mailto:zheshen@ieee.org">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Detect Instability<br><span class="blue">Before It Fails</span></h1>
+        <p>Stability monitoring for robotics, aerospace, and autonomous systems.</p>
+      </div>
+    </section>
+
+    <section class="tech-section" id="technology">
+      <div class="label">Built for safety-critical robotic systems</div>
+      <h2>Monitor Stability. No Access. No Intrusion.</h2>
+
+      <div class="features">
+        <div class="feature">
+          <div class="tech-icon">
+            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M60 12L98 30V58C98 82 82 101 60 109C38 101 22 82 22 58V30L60 12Z" stroke="#2790ff" stroke-width="3"/>
+              <rect x="42" y="55" width="36" height="30" rx="5" stroke="#61bdff" stroke-width="3"/>
+              <path d="M50 55V44C50 37 54 32 60 32C66 32 70 37 70 44V55" stroke="#61bdff" stroke-width="3"/>
+              <circle cx="60" cy="70" r="4" fill="#2790ff"/>
+            </svg>
+          </div>
+          <h3>No Source Code Required</h3>
+          <p>No access to internal controller logic.</p>
+        </div>
+
+        <div class="feature">
+          <div class="tech-icon">
+            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="60" cy="60" r="45" stroke="#2790ff" stroke-width="2" opacity="0.75"/>
+              <circle cx="60" cy="60" r="31" stroke="#1d66d8" stroke-width="1" opacity="0.65"/>
+              <path d="M18 62H42L48 49L57 78L66 38L76 62H102" stroke="#61bdff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3>Early Instability Detection</h3>
+          <p>Detect degradation before accidents.</p>
+        </div>
+
+        <div class="feature">
+          <div class="tech-icon">
+            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M60 16L98 38V82L60 104L22 82V38L60 16Z" stroke="#2790ff" stroke-width="2"/>
+              <path d="M60 16V60M98 38L60 60M98 82L60 60M60 104V60M22 82L60 60M22 38L60 60" stroke="#61bdff" stroke-width="1.8" opacity="0.85"/>
+              <circle cx="60" cy="60" r="6" fill="#61bdff"/>
+              <circle cx="60" cy="16" r="4" fill="#2790ff"/>
+              <circle cx="98" cy="38" r="4" fill="#2790ff"/>
+              <circle cx="98" cy="82" r="4" fill="#2790ff"/>
+              <circle cx="60" cy="104" r="4" fill="#2790ff"/>
+              <circle cx="22" cy="82" r="4" fill="#2790ff"/>
+              <circle cx="22" cy="38" r="4" fill="#2790ff"/>
+            </svg>
+          </div>
+          <h3>Black-box Compatible</h3>
+          <p>Applicable to unknown systems.</p>
+        </div>
+
+        <div class="feature">
+          <div class="tech-icon">
+            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="18" y="24" width="84" height="64" rx="6" stroke="#2790ff" stroke-width="2"/>
+              <path d="M30 72V58M45 72V48M60 72V38M75 72V30" stroke="#61bdff" stroke-width="4"/>
+              <path d="M30 36H52M30 46H44" stroke="#61bdff" stroke-width="3" opacity="0.7"/>
+              <circle cx="86" cy="42" r="12" stroke="#61bdff" stroke-width="3"/>
+              <path d="M86 34V42L92 47" stroke="#61bdff" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3>Actionable Reports</h3>
+          <p>Receive stability metrics for engineering decisions.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="applications" id="applications">
+      <div class="label">Applications</div>
+      <h2>Where Stability Matters</h2>
+
+      <div class="cards">
+        <div class="app-card">
+          <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1600&q=90" alt="Aviation" />
+          <div class="app-content">
+            <div class="app-title-row">
+              <svg class="mini-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 16l20-8-20-8 4 8-4 8z"/><path d="M6 8h10"/></svg>
+              <h3>Aviation</h3>
+            </div>
+            <p>Detect loss of control stability from flight data.</p>
+            <span class="arrow">→</span>
+          </div>
+        </div>
+
+        <div class="app-card">
+          <img src="https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=1600&q=90" alt="Drones and UAVs" />
+          <div class="app-content">
+            <div class="app-title-row">
+              <svg class="mini-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><path d="M9 6h6M9 18h6M6 9v6M18 9v6"/></svg>
+              <h3>Drones & UAVs</h3>
+            </div>
+            <p>Verify stability for black-box controllers.</p>
+            <span class="arrow">→</span>
+          </div>
+        </div>
+
+        <div class="app-card">
+          <img src="https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&w=1600&q=90" alt="Autonomous vehicles" />
+          <div class="app-content">
+            <div class="app-title-row">
+              <svg class="mini-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 13l2-5h14l2 5"/><path d="M5 13h14v5H5z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+              <h3>Autonomous Vehicles</h3>
+            </div>
+            <p>Monitor control stability beyond tracking error.</p>
+            <span class="arrow">→</span>
+          </div>
+        </div>
+
+        <div class="app-card">
+          <img src="robotics-arm.png" alt="Robotics" />
+          <div class="app-content">
+            <div class="app-title-row">
+              <svg class="mini-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 21h10M12 21v-6M6 15l6-6 6 6M12 9V3M9 3h6"/></svg>
+              <h3>Robotics</h3>
+            </div>
+            <p>Support safe robot motion.</p>
+            <span class="arrow">→</span>
+          </div>
+        </div>
+
+        <div class="app-card">
+          <img src="https://images.unsplash.com/photo-1446776877081-d282a0f896e2?auto=format&fit=crop&w=1600&q=90" alt="Space systems" />
+          <div class="app-content">
+            <div class="app-title-row">
+              <svg class="mini-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l4 8 6 2-6 2-4 8-4-8-6-2 6-2 4-8z"/><path d="M4 20l4-4M20 4l-4 4"/></svg>
+              <h3>Space Systems</h3>
+            </div>
+            <p>Analyze attitude and orbital control stability.</p>
+            <span class="arrow">→</span>
+          </div>
+        </div>
+
+        <div class="app-card">
+          <img src="https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&w=1600&q=90" alt="Industrial control" />
+          <div class="app-content">
+            <div class="app-title-row">
+              <svg class="mini-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21V9l6 4V9l6 4V5h6v16H3z"/><path d="M7 17h2M12 17h2M17 17h2"/></svg>
+              <h3>Industrial Control</h3>
+            </div>
+            <p>Detect instability early in process control systems.</p>
+            <span class="arrow">→</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pilot" id="solutions">
+      <div class="label">Start with a pilot</div>
+      <h2>Real Data. Fast Insight. No Integration Required.</h2>
+      <p>You provide system data. We analyze stability risk and deliver a technical report. A simple starting point for safer autonomous systems.</p>
+      <a class="button" href="mailto:zheshen@ieee.org?subject=Stable Robotics Pilot">Start a Pilot <span>→</span></a>
+    </section>
+  </main>
+
+  <footer id="about">
+    <div>
+      <strong>Stable Robotics Ltd.</strong><br />
+      Data-Driven Stability Monitoring<br />
+      London, UK
+    </div>
+
+    <div>
+      Founder & CEO: <strong>Zhe Shen</strong><br />
+      Contact: <a href="mailto:zheshen@ieee.org">zheshen@ieee.org</a>
+    </div>
+  </footer>
+
+  <script>
+    const header = document.getElementById("site-header");
+
+    window.addEventListener("scroll", function () {
+      if (window.scrollY > 40) {
+        header.classList.add("scrolled");
+      } else {
+        header.classList.remove("scrolled");
+      }
+    });
+  </script>
+</body>
+</html>
